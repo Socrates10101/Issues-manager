@@ -9,9 +9,9 @@ import (
 )
 
 const legacyActive = `---
-project: homelab
+project: infra
 ---
-# Issue 008: WAF カスタムルール (Phase2-C)
+# Issue 008: WAF custom rules (phase 2)
 
 ## 報告日
 2026-06-20
@@ -22,13 +22,13 @@ project: homelab
 
 ## 概要
 
-CF Access の手前の edge に軽い WAF を追加。
+edge に軽い WAF を追加。
 `
 
 const legacyNew = `---
-project: dotfiles
+project: tools
 ---
-# Issue 030: desubmodule dotfiles
+# Issue 030: split repository
 
 ## ステータス
 **新規**
@@ -39,10 +39,10 @@ project: dotfiles
 
 func TestRunMigration(t *testing.T) {
 	src := t.TempDir()
-	mustWrite(t, filepath.Join(src, "homelab", "008-waf-custom-rules.md"), legacyActive)
-	mustWrite(t, filepath.Join(src, "dotfiles", "030-desubmodule-dotfiles.md"), legacyNew)
-	mustWrite(t, filepath.Join(src, "archive", "dotfiles", "006-jj-diff-viewer.md"),
-		"---\nproject: dotfiles\n---\n# Issue 006: jj diff viewer\n\n## ステータス\n解決済\n")
+	mustWrite(t, filepath.Join(src, "infra", "008-waf-custom-rules.md"), legacyActive)
+	mustWrite(t, filepath.Join(src, "tools", "030-split-repository.md"), legacyNew)
+	mustWrite(t, filepath.Join(src, "archive", "tools", "006-jj-diff-viewer.md"),
+		"---\nproject: tools\n---\n# Issue 006: jj diff viewer\n\n## ステータス\n解決済\n")
 
 	dst := t.TempDir()
 	st, err := store.New(dst, func() string { return "2026-06-28" })
@@ -57,11 +57,11 @@ func TestRunMigration(t *testing.T) {
 		t.Fatalf("counts: active=%d archived=%d", res.Active, res.Archived)
 	}
 
-	got, err := st.Get("homelab", 8)
+	got, err := st.Get("infra", 8)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got.Title != "WAF カスタムルール (Phase2-C)" {
+	if got.Title != "WAF custom rules (phase 2)" {
 		t.Fatalf("title: %q", got.Title)
 	}
 	if got.Status != "解決済" {
@@ -71,16 +71,16 @@ func TestRunMigration(t *testing.T) {
 		t.Fatalf("created: %q", got.Created)
 	}
 	// preserved slug
-	if _, err := os.Stat(filepath.Join(dst, "homelab", "008-waf-custom-rules.md")); err != nil {
+	if _, err := os.Stat(filepath.Join(dst, "infra", "008-waf-custom-rules.md")); err != nil {
 		t.Fatalf("slug not preserved: %v", err)
 	}
 
-	nw, _ := st.Get("dotfiles", 30)
+	nw, _ := st.Get("tools", 30)
 	if nw.Status != "新規" {
 		t.Fatalf("new status: %q", nw.Status)
 	}
 
-	arch, _ := st.Get("dotfiles", 6)
+	arch, _ := st.Get("tools", 6)
 	if !arch.Archived {
 		t.Fatalf("expected archived issue")
 	}

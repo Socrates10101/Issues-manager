@@ -289,7 +289,7 @@ func (s *Store) Update(project string, number int, title, status, body *string) 
 	// Identity is the number, not the slug. Any write (even a status-only
 	// change) re-derives the filename from the title, so we must remove any
 	// stale NNN-* file whose slug no longer matches — otherwise a slug
-	// mismatch (e.g. a migrated issue with a custom slug) silently orphans the
+	// mismatch (e.g. an imported issue with a custom slug) silently orphans the
 	// old file and the number shows up twice.
 	if err := s.writeReplacing(iss, iss.Archived); err != nil {
 		return Issue{}, err
@@ -324,7 +324,9 @@ func (s *Store) Archive(project string, number int) (Issue, error) {
 	return iss, nil
 }
 
-// Import writes an issue verbatim (used by migration); preserves slug if given.
+// Import writes an issue verbatim, without assigning a number or touching
+// timestamps. If slug is non-empty it is used as the filename slug instead of
+// one derived from the title. Intended for bulk imports from other systems.
 func (s *Store) Import(iss Issue, slug string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()

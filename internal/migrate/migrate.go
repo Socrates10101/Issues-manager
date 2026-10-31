@@ -1,7 +1,8 @@
-// Package migrate imports the legacy dotfiles Issues/ tree (frontmatter with
-// only `project:`, title in a `# Issue NNN:` heading, status in a `## ステータス`
-// section) into the structured store. History is intentionally dropped — only
-// the current state of each file is copied.
+// Package migrate is a one-off importer for a legacy, pre-frontmatter layout
+// (frontmatter with only `project:`, title in a `# Issue NNN:` heading, status
+// in a `## ステータス` section). It is no longer wired into the CLI and is kept
+// only as an example of using store.Import for bulk imports. History is
+// intentionally dropped; only the current state of each file is copied.
 package migrate
 
 import (

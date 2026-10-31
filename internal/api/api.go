@@ -1,5 +1,5 @@
 // Package api exposes the store over HTTP. Routes map 1:1 onto the issues CLI
-// and the issues-manager skill commands.
+// subcommands.
 package api
 
 import (

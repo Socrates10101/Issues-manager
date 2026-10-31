@@ -1,6 +1,5 @@
 // Command issues is both the HTTP server (`issues serve`) and the CLI client
-// (`issues ls|show|new|status|archive`) for the issue tracker, plus a one-shot
-// `issues migrate` to import the legacy dotfiles Issues/ tree.
+// (`issues ls|show|new|status|archive`) for the issue tracker.
 package main
 
 import (
@@ -19,7 +18,6 @@ import (
 
 	"github.com/Socrates10101/issues-manager/internal/api"
 	"github.com/Socrates10101/issues-manager/internal/client"
-	"github.com/Socrates10101/issues-manager/internal/migrate"
 	"github.com/Socrates10101/issues-manager/internal/store"
 )
 
@@ -34,8 +32,6 @@ func main() {
 	switch cmd {
 	case "serve":
 		err = cmdServe(args)
-	case "migrate":
-		err = cmdMigrate(args)
 	case "ls", "list":
 		err = cmdList(args)
 	case "show":
@@ -65,7 +61,6 @@ func usage() {
 
 Server:
   issues serve [-data DIR] [-addr HOST] [-port N] [-token-file FILE]
-  issues migrate -from DIR [-data DIR]
 
 Client (targets $ISSUES_URL, default http://127.0.0.1:8787):
   issues ls [-p PROJECT] [-s STATUS] [--archived] [--all]
@@ -118,27 +113,6 @@ func cmdServe(args []string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	return srv.Shutdown(ctx)
-}
-
-func cmdMigrate(args []string) error {
-	fs := flag.NewFlagSet("migrate", flag.ExitOnError)
-	from := fs.String("from", "", "legacy Issues/ directory to import")
-	data := fs.String("data", envOr("ISSUES_DATA", "/var/lib/issues"), "destination data directory")
-	_ = fs.Parse(args)
-	if *from == "" {
-		return fmt.Errorf("-from is required")
-	}
-	st, err := store.New(*data, today)
-	if err != nil {
-		return err
-	}
-	res, err := migrate.Run(*from, st)
-	if err != nil {
-		return err
-	}
-	fmt.Printf("migrated %d active + %d archived = %d issues into %s\n",
-		res.Active, res.Archived, res.Active+res.Archived, *data)
-	return nil
 }
 
 // ---- client commands ----
