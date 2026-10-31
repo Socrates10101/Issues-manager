@@ -28,9 +28,9 @@ const ResolvedStatus = "解決済"
 var ValidStatuses = []string{"新規", "調査中", "対応中", "修正完了・検証待ち", "解決済"}
 
 var (
-	ErrNotFound   = errors.New("issue not found")
-	ErrExists     = errors.New("issue already exists")
-	ErrBadStatus  = errors.New("invalid status")
+	ErrNotFound    = errors.New("issue not found")
+	ErrExists      = errors.New("issue already exists")
+	ErrBadStatus   = errors.New("invalid status")
 	ErrNotResolved = errors.New("issue is not 解決済; cannot archive")
 )
 
