@@ -1,6 +1,6 @@
-# NixOS module: services.issues — host-agnostic. Enable on any homelab host
-# (lab1, a gem12 microvm, …) with a single `services.issues.enable = true`.
-# Host-specific values (port, dataDir, bind address, token) are options only.
+# NixOS module: services.issues — host-agnostic. Enable on any host with a
+# single `services.issues.enable = true`. Host-specific values (port, dataDir,
+# bind address, token) are exposed as options.
 { config, lib, pkgs, ... }:
 
 let
@@ -26,15 +26,15 @@ in
     bindAddress = lib.mkOption {
       type = lib.types.str;
       default = "0.0.0.0";
-      example = "100.86.153.27";
-      description = "Address to bind. Use a Tailscale/LAN IP to scope reachability.";
+      example = "192.0.2.10";
+      description = "Address to bind. Use a private or VPN interface address to limit reachability.";
     };
 
     dataDir = lib.mkOption {
       type = lib.types.path;
       default = "/var/lib/issues";
       description = ''
-        Directory holding the markdown SSOT. With the default value the service
+        Directory holding the markdown issue files. With the default value the service
         provisions it via systemd StateDirectory. If you change it, make sure the
         path exists and is writable by the service user.
       '';
@@ -44,7 +44,7 @@ in
       type = lib.types.nullOr lib.types.path;
       default = null;
       example = "/run/secrets/issues-token";
-      description = "Optional file with a static bearer token. Null = no auth (LAN trust).";
+      description = "Optional file with a static bearer token. Null = no auth; rely on network isolation.";
     };
 
     openFirewall = lib.mkOption {
