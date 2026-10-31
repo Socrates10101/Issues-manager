@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/Socrates10101/issues/internal/store"
+	"github.com/Socrates10101/issues-manager/internal/store"
 )
 
 const legacyActive = `---

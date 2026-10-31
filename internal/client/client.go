@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Socrates10101/issues/internal/store"
+	"github.com/Socrates10101/issues-manager/internal/store"
 )
 
 type Client struct {

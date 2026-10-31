@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Socrates10101/issues/internal/store"
+	"github.com/Socrates10101/issues-manager/internal/store"
 )
 
 // Server wires a store and optional bearer token into an http.Handler.

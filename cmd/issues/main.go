@@ -17,10 +17,10 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/Socrates10101/issues/internal/api"
-	"github.com/Socrates10101/issues/internal/client"
-	"github.com/Socrates10101/issues/internal/migrate"
-	"github.com/Socrates10101/issues/internal/store"
+	"github.com/Socrates10101/issues-manager/internal/api"
+	"github.com/Socrates10101/issues-manager/internal/client"
+	"github.com/Socrates10101/issues-manager/internal/migrate"
+	"github.com/Socrates10101/issues-manager/internal/store"
 )
 
 func main() {
